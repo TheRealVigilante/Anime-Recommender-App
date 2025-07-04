@@ -12,10 +12,10 @@ A simple, interactive anime recommendation engine built with **Streamlit** and p
 
 ## 📦 Dataset
 
-We use the **Top 15,000 Ranked Anime Dataset** from Kaggle:  
-🔗 [Kaggle Dataset Link](https://www.kaggle.com/datasets/quanthan/top-15000-ranked-anime-dataset-update-to-32025?select=top_anime_dataset.csv)
+We use the **Top 15,000 Ranked Anime Dataset** from Kaggle
 
-> Note: This is the link to the data without the preprocessing done, the processed version is found within the repository
+- 🔗 [Unprocessed Kaggle Dataset Link](https://www.kaggle.com/datasets/quanthan/top-15000-ranked-anime-dataset-update-to-32025?select=top_anime_dataset.csv)
+- 🔗 [Processed HuggingFace Dataset Link](https://huggingface.co/datasets/TheVigilante/Processed_Top_15k_Anime/blob/main/anime.csv)
 
 ---
 
