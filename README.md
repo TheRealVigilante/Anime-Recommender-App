@@ -10,32 +10,28 @@ A simple, interactive anime recommendation engine built with **Streamlit** and p
 - 🖼️ Includes posters, genres, and synopsis previews
 - 🔗 Direct links to MyAnimeList (MAL) pages
 
-## 📦 Dataset
-
-We use the **Top 15,000 Ranked Anime Dataset** from Kaggle
-
-- 🔗 [Unprocessed Kaggle Dataset Link](https://www.kaggle.com/datasets/quanthan/top-15000-ranked-anime-dataset-update-to-32025?select=top_anime_dataset.csv)
-- 🔗 [Processed HuggingFace Dataset Link](https://huggingface.co/datasets/TheVigilante/Processed_Top_15k_Anime/blob/main/anime.csv)
-
----
-
 ## 🛠 Installation
 
-### 1. Clone the repo
+### 1. Download the data from the link below
+I used my processed version of **Top 15,000 Ranked Anime Dataset** uploaded on HuggingFace
+
+🔗 [Processed HuggingFace Dataset Link](https://huggingface.co/datasets/TheVigilante/Processed_Top_15k_Anime/blob/main/anime.csv)
+
+### 2. Clone the repo
 
 ```bash
 git clone https://github.com/TheRealVigilante/anime-recommender-app.git
 cd anime-recommender-app
 ````
 
-### 2. Create virtual environment (optional but recommended)
+### 3. Create virtual environment (optional but recommended)
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
 ```
 
-### 3. Install requirements
+### 4. Install requirements
 
 ```bash
 pip install -r requirements.txt
@@ -69,7 +65,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-It will automatically open [http://localhost:8501](http://localhost:8501) in your browser.
+It will automatically open [localhost](http://localhost:8501) in your browser.
 
 
 ## 👨‍💻 Author
