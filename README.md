@@ -62,6 +62,11 @@ pip install -r requirements.txt
 ## ▶️ Running the App
 
 ```bash
+python recommender.py
+```
+It will download the model
+
+```bash
 streamlit run app.py
 ```
 
