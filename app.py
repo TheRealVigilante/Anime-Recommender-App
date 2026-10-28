@@ -1,10 +1,10 @@
 import streamlit as st
-import pandas as pd
-from recommender import recommend_anime
+from recommender import recommend_anime, df
 
 st.set_page_config(page_title="🎌 Anime Recommender", layout="centered")
 
-df = pd.read_csv('data/anime.csv')  # Ensure it's the cleaned version
+# df is already loaded and normalised by recommender.py — import directly
+# to avoid reading and renaming the CSV a second time.
 anime_titles = sorted(df['name'].tolist())
 
 st.title("🎌 Anime Recommender")
@@ -24,20 +24,31 @@ if st.button("🚀 Recommend Similar Anime"):
     st.markdown(f"**Score:** {anime_data['score']} | **Rank:** #{anime_data['rank']} | **Type:** {anime_data['type']}")
     st.markdown(f"**Genres:** {anime_data['genres']}")
     st.markdown("### 📜 Synopsis")
-    st.write(anime_data['synopsis'][:700] + "...")
-    st.markdown(f"[🔗 View on MyAnimeList]({anime_data['anime_url']})")  # ← MAL link
+    st.write(str(anime_data['synopsis'])[:700] + "...")
+    # No anime_url column in the CSV; construct MAL link from anime_id.
+    mal_url = f"https://myanimelist.net/anime/{anime_data['anime_id']}"
+    st.markdown(f"[🔗 View on MyAnimeList]({mal_url})")
 
     st.markdown("---")
     st.markdown(f"### 🔁 Top {top_n} Recommendations (score ≥ {min_score})")
 
-    recs = recommend_anime(selected, top_n=top_n)
-    recs = recs[recs['score'] >= min_score]
+    # Upgrade 6 — unpack tuple; min_score filtering is done inside the function.
+    recs, matched_title = recommend_anime(selected, top_n=top_n, min_score=min_score)
+
+    # Show a note if a fuzzy match was used instead of an exact one.
+    if matched_title and matched_title != selected:
+        st.info(f"Showing results for: *{matched_title}*")
 
     if len(recs) == 0:
         st.warning("No high-quality recommendations found.")
     else:
         for _, rec in recs.iterrows():
-            with st.expander(f"🎥 {rec['name']} ({rec['score']}/10)", expanded=False):
+            # Upgrade 5 — show blended similarity percentage in expander header.
+            with st.expander(
+                f"🎥 {rec['name']} ({rec['score']}/10) — {rec['similarity_score'] * 100:.0f}% match",
+                expanded=False,
+            ):
                 st.image(rec['image_url'], width=150)
                 st.markdown(f"**Genres:** {rec['genres']}")
-                st.write(rec['synopsis'][:400] + "... [More Info](" + rec['anime_url'] + ")")
+                rec_mal_url = f"https://myanimelist.net/anime/{rec['anime_id']}"
+                st.write(str(rec['synopsis'])[:400] + f"... [More Info]({rec_mal_url})")
