@@ -155,3 +155,7 @@ cython_debug/
 screenshotter.py
 
 data/anime.csv
+data/anime-dataset-2026.csv
+data/TMDB_movie_dataset_v11.csv
+/.agents
+/model

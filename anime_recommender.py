@@ -54,7 +54,7 @@ corpus = df['combined_features'].tolist()
 # Upgrade 1 — Cache embeddings with joblib
 # Cache key: CSV file mtime; recompute if CSV has changed.
 # ---------------------------------------------------------------------------
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer(r'model\all-MiniLM-L6-v2')
 
 csv_mtime = os.path.getmtime(CSV_PATH)
 
@@ -116,7 +116,12 @@ def recommend_anime(title, top_n=5, min_score=0.0):
     recommendations = df.iloc[sim_indices].copy()
 
     # Upgrade 5 — attach blended score as similarity_score column.
+    # Assign before any row-dropping so the positional alignment is intact.
     recommendations['similarity_score'] = blended[sim_indices]
+
+    # Explicitly remove the queried anime by index so self-recommendation never
+    # appears, regardless of whether the prefix dedup below catches it.
+    recommendations = recommendations[recommendations.index != idx]
 
     # Upgrade 7 — prefix-only dedup to avoid over-filtering unrelated titles.
     # (No franchise/series/related column exists in anime-dataset-2026.csv;
