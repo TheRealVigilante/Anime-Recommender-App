@@ -159,5 +159,9 @@ data/anime-dataset-2026.csv
 data/TMDB_movie_dataset_v11.csv
 /.agents
 /model
+# Track the model directory structure but not the large weight file
+!/model/
+!/model/all-MiniLM-L6-v2/**
 data/embeddings_cache.joblib
 data/movie_embeddings_cache.joblib
+/model/all-MiniLM-L6-v2
