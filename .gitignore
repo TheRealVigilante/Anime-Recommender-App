@@ -159,3 +159,5 @@ data/anime-dataset-2026.csv
 data/TMDB_movie_dataset_v11.csv
 /.agents
 /model
+data/embeddings_cache.joblib
+data/movie_embeddings_cache.joblib
