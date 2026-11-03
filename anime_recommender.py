@@ -38,6 +38,8 @@ df.rename(columns={
 }, inplace=True)
 
 df['score'] = pd.to_numeric(df['score'], errors='coerce').fillna(0.0)
+df['name'] = df['name'].fillna('').astype(str)
+df = df[df['name'].str.strip() != ''].reset_index(drop=True)
 
 df['combined_features'] = (
     'Genres: ' + df['genres'].fillna('') + '. '
@@ -113,11 +115,30 @@ def recommend_anime(title, top_n=5, min_score=0.0, *, _resources=None):
     recommendations['similarity_score'] = blended[sim_indices]
     recommendations = recommendations[recommendations.index != idx]
 
-    # Prefix-only dedup — exclude sequels/variants sharing the root title.
-    # (No franchise column exists in anime-dataset-2026.csv.)
-    root = matched_title.lower().split(':')[0].strip()
+    # Franchise dedup — exclude sequels, movies, and variants of the queried title.
+    # Anime naming has many patterns: "Naruto: Shippuuden", "SAO II", "Dragon Ball Z",
+    # "Bleach Movie 1: ...", "Boku no Hero Academia 2nd Season", etc.
+    # Strategy: strip the query down to its bare franchise root (drop everything after
+    # ':', and trailing season/part/movie/OVA markers), then use rapidfuzz partial_ratio
+    # to catch any candidate that contains that root. Threshold of 85 avoids false
+    # positives while catching all common sequel/variant patterns.
+    import re
+    from rapidfuzz.fuzz import partial_ratio
+
+    # Build the bare franchise root from the matched title.
+    franchise_root = matched_title.lower()
+    # Drop subtitle after ':'
+    franchise_root = franchise_root.split(':')[0]
+    # Drop trailing season/part/movie/ova/special markers and ordinals
+    franchise_root = re.sub(
+        r'\s+(?:\d+(?:st|nd|rd|th)?|[ivxlcdm]+|season|part|movie|ova|oad|special|film|arc|hen|final|the)\b.*$',
+        '', franchise_root, flags=re.IGNORECASE
+    ).strip()
+
     recommendations = recommendations[
-        ~recommendations['name'].str.lower().str.startswith(root, na=False)
+        recommendations['name'].apply(
+            lambda n: partial_ratio(franchise_root, str(n).lower()) < 85
+        )
     ]
 
     if min_score > 0.0:

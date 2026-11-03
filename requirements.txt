@@ -1,7 +1,24 @@
-streamlit>=1.28
-pandas>=2.0
-scikit-learn>=1.3
-numpy>=1.24
-sentence-transformers>=2.2
-joblib>=1.3
-rapidfuzz>=3.0
+# Core app
+streamlit==1.63.0
+pandas==2.3.3
+numpy==2.2.6
+scikit-learn==1.7.2
+joblib==1.6.0
+rapidfuzz==3.14.5
+
+# Embeddings
+torch==2.5.1
+sentence-transformers==3.4.1
+# TensorFlow is present in the dawn env but its DLL is broken on this machine.
+# USE_TF=0 is set at the top of each recommender module to prevent transformers
+# from attempting to load it.
+tf-keras>=2.16
+
+# Model
+# The sentence-transformers model is stored locally at:
+#   model/all-MiniLM-L6-v2/
+# It was downloaded from https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+# To re-download (requires HuggingFace access):
+#   python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+# Then copy from ~/.cache/huggingface/hub/models--sentence-transformers--all-MiniLM-L6-v2/
+# into model/all-MiniLM-L6-v2/
