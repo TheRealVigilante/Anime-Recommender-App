@@ -3,8 +3,8 @@ os.environ.setdefault('USE_TF', '0')
 os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '3')
 
 import streamlit as st
-from movie_recommender import recommend_movies, df as movie_df
-from movie_recommender import load as load_movies
+from archive.movie_recommender import recommend_movies, df as movie_df
+from archive.movie_recommender import load as load_movies
 
 st.set_page_config(
     page_title="Movie Recommender",

@@ -26,6 +26,18 @@ MODEL_PATH = r'model\all-MiniLM-L6-v2'
 df = pd.read_csv(CSV_PATH)
 
 df['vote_average'] = pd.to_numeric(df['vote_average'], errors='coerce').fillna(0.0)
+df['vote_count'] = pd.to_numeric(df['vote_count'], errors='coerce').fillna(0)
+df['title'] = df['title'].fillna('').astype(str)
+
+# Quality filter: keep only released movies with at least 50 votes.
+# The raw CSV has 1.5M rows but ~75% have zero votes (placeholder entries).
+# This brings the working set down to ~28K well-known movies, cutting both
+# CSV processing time and embedding cache size by ~97%.
+df = df[
+    (df['title'].str.strip() != '') &
+    (df['status'].str.lower() == 'released') &
+    (df['vote_count'] >= 50)
+].reset_index(drop=True)
 
 df['combined_features'] = (
     'Genres: '   + df['genres'].fillna('')            + '. '
